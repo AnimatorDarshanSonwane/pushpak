@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'routes/app_routes.dart';
+import 'themes/app_theme.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Pushpak Ride App",
+      title: "Uber Clone",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      initialRoute: AppRoutes.home,
-      onGenerateRoute: AppRoutes.generateRoute,
+      theme: AppTheme.lightTheme,
+      initialRoute: AppRoutes.initial,
+      routes: AppRoutes.routes,
     );
   }
 }
