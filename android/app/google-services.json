@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375010464684",
+    "project_id": "pushpak-311b1",
+    "storage_bucket": "pushpak-311b1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375010464684:android:b27b39acf7eacd67a72009",
+        "android_client_info": {
+          "package_name": "com.example.pushpak"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnBIFvREBO-Ki-WmmZg7mZwE9oN7dRJuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

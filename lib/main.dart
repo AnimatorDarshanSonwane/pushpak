@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
-import 'app.dart';
-import 'di/service_locator.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Register all dependencies
-  await setupLocator();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Pushpak App',
+      home: Scaffold(
+        appBar: AppBar(title: Text("Firebase Connected")),
+        body: Center(child: Text("Firebase Setup Successful!")),
+      ),
+    );
+  }
 }
