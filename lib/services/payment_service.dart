@@ -1,5 +1,6 @@
 class PaymentService {
   Future<bool> makePayment(double amount) async {
+    // ignore: avoid_print
     print("Processing payment of ₹$amount...");
     await Future.delayed(const Duration(seconds: 1));
 

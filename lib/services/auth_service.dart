@@ -51,45 +51,56 @@ class AuthService {
   // --------------------------------------------------
   // GOOGLE SIGN-IN (UPDATED 2025)
   // --------------------------------------------------
-  Future<UserCredential> signInWithGoogle() async {
-    try {
-      // Initialize Google Sign-In for all platforms
-      await GoogleSignIn.instance.initialize(
-        clientId:
-            "375010464684-ei7cgf66k5d33b9ivbs8vuigofj4njql.apps.googleusercontent.com",
-      );
 
-      // Authenticate Google user (replaces signIn())
-      // ignore: unnecessary_nullable_for_final_variable_declarations
-      final GoogleSignInAccount? googleUser =
-          await GoogleSignIn.instance.authenticate();
+Future<UserCredential> signInWithGoogle() async {
+  try {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
-      if (googleUser == null) {
-        throw FirebaseAuthException(
-          code: "ERROR_ABORTED_BY_USER",
-          message: "Sign-in aborted",
-        );
-      }
-
-      // Get tokens
-      final GoogleSignInAuthentication googleAuth =
-          googleUser.authentication;
-
-      // Firebase credential
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-    idToken: googleAuth.idToken,
+    // ---------------------------------
+    // INITIALIZE GOOGLE SIGN-IN
+    // ---------------------------------
+    await GoogleSignIn.instance.initialize(
+      serverClientId:
+          '375010464684-ei7cgf66k5d33b9ivbs8vuigofj4njql.apps.googleusercontent.com',
     );
 
-      // Firebase sign-in
-      final userCred = await _auth.signInWithCredential(credential);
+    // ---------------------------------
+    // AUTHENTICATE USER
+    // ---------------------------------
+    final GoogleSignInAccount? googleUser =
+        await GoogleSignIn.instance.authenticate();
 
-      await saveUserToFirestore(userCred.user);
-      return userCred;
-    } catch (e) {
-      debugPrint("Google Sign-In Error: $e");
-      rethrow;
+    if (googleUser == null) {
+      throw FirebaseAuthException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign-in cancelled by user',
+      );
     }
+
+    // ---------------------------------
+    // GET AUTH TOKENS
+    // ---------------------------------
+    final GoogleSignInAuthentication googleAuth =
+        googleUser.authentication;
+
+    // ---------------------------------
+    // FIREBASE CREDENTIAL
+    // ---------------------------------
+    final OAuthCredential credential =
+        GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken
+    );
+
+    final UserCredential userCredential =
+        await _auth.signInWithCredential(credential);
+
+    return userCredential;
+  } catch (e) {
+    debugPrint('Google Sign-In Error: $e');
+    rethrow;
   }
+}
+
 
   // --------------------------------------------------
   // PHONE AUTH: SEND OTP
