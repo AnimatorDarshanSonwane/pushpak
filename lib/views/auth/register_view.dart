@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pushpak/di/service_locator.dart';
 import '../../viewmodels/auth_viewmodel.dart';
@@ -50,11 +52,11 @@ class _RegisterViewState extends State<RegisterView> {
                 password: _passCtrl.text,
                 displayName: _nameCtrl.text,
               );
-              if (!ok) {
+              if (ok) {
+                Navigator.of(context).pushReplacementNamed('/'); // Navigate to home on success
+              } else {
                 final msg = vm.errorMessage ?? 'Registration failed';
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-              } else {
-                Navigator.of(context).pop(); // go back to login
               }
             },
             child: const Text('Create Account'),

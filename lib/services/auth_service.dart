@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -59,6 +60,7 @@ class AuthService {
       );
 
       // Authenticate Google user (replaces signIn())
+      // ignore: unnecessary_nullable_for_final_variable_declarations
       final GoogleSignInAccount? googleUser =
           await GoogleSignIn.instance.authenticate();
 
@@ -71,7 +73,7 @@ class AuthService {
 
       // Get tokens
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+          googleUser.authentication;
 
       // Firebase credential
       final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -84,7 +86,7 @@ class AuthService {
       await saveUserToFirestore(userCred.user);
       return userCred;
     } catch (e) {
-      print("Google Sign-In Error: $e");
+      debugPrint("Google Sign-In Error: $e");
       rethrow;
     }
   }
@@ -99,14 +101,28 @@ class AuthService {
     required Function(FirebaseAuthException) verificationFailed,
     Duration timeout = const Duration(seconds: 60),
   }) async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: (String verificationId) {},
-      timeout: timeout,
-    );
+    debugPrint('Verifying phone: $phoneNumber');
+    if (kIsWeb) {
+      // For web, Firebase handles reCAPTCHA automatically
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: (String verificationId) {},
+        timeout: timeout,
+      );
+    } else {
+      // For mobile platforms
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: (String verificationId) {},
+        timeout: timeout,
+      );
+    }
   }
 
   // --------------------------------------------------
@@ -135,7 +151,7 @@ class AuthService {
       // Android/iOS also use instance (because you initialized it earlier)
       await GoogleSignIn.instance.signOut();
     } catch (e) {
-      print("Google Sign-Out Error: $e");
+      debugPrint("Google Sign-Out Error: $e");
     }
 
     await _auth.signOut();

@@ -66,6 +66,7 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                 final credential = PhoneAuthProvider.credential(verificationId: _verificationId!, smsCode: code);
                 try {
                   await vm.signInWithPhoneCredential(credential);
+                  Navigator.of(context).pushReplacementNamed('/'); // Navigate to home on success
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                 }

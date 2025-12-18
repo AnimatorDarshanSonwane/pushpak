@@ -45,7 +45,9 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () async {
                 if (!_formKey.currentState!.validate()) return;
                 final ok = await vm.signInWithEmail(email: _emailCtrl.text, password: _passCtrl.text);
-                if (!ok) {
+                if (ok) {
+                  Navigator.of(context).pushReplacementNamed('/'); // Navigate to home on success
+                } else {
                   final msg = vm.errorMessage ?? 'Login failed';
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
                 }
@@ -58,7 +60,9 @@ class _LoginViewState extends State<LoginView> {
               label: const Text('Sign in with Google'),
               onPressed: () async {
                 final ok = await vm.signInWithGoogle();
-                if (!ok) {
+                if (ok) {
+                  Navigator.of(context).pushReplacementNamed('/'); // Navigate to home on success
+                } else {
                   final m = vm.errorMessage ?? 'Google sign in failed';
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
                 }

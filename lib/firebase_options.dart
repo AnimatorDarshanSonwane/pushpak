@@ -48,6 +48,8 @@ class DefaultFirebaseOptions {
     authDomain: 'pushpak-311b1.firebaseapp.com',
     storageBucket: 'pushpak-311b1.firebasestorage.app',
     measurementId: 'G-9Q431T1QDV',
+    // Add your reCAPTCHA site key here (from Firebase Console > Authentication > Sign-in method > Phone)
+    // recaptchaSiteKey: 'your-recaptcha-site-key',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
