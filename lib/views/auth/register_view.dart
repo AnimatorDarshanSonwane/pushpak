@@ -32,36 +32,56 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(children: [
-          Form(
-            key: _formKey,
-            child: Column(children: [
-              TextFormField(controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Full name')),
-              const SizedBox(height: 8),
-              TextFormField(controller: _emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
-              const SizedBox(height: 8),
-              TextFormField(controller: _passCtrl, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
-            ]),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () async {
-              if (!_formKey.currentState!.validate()) return;
-              final ok = await vm.registerWithEmail(
-                email: _emailCtrl.text,
-                password: _passCtrl.text,
-                displayName: _nameCtrl.text,
-              );
-              if (ok) {
-                Navigator.of(context).pushReplacementNamed('/'); // Navigate to home on success
-              } else {
-                final msg = vm.errorMessage ?? 'Registration failed';
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-              }
-            },
-            child: const Text('Create Account'),
-          ),
-        ]),
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nameCtrl,
+                    decoration: const InputDecoration(labelText: 'Full name'),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _emailCtrl,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _passCtrl,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                if (!_formKey.currentState!.validate()) return;
+                final ok = await vm.registerWithEmail(
+                  email: _emailCtrl.text,
+                  password: _passCtrl.text,
+                  displayName: _nameCtrl.text,
+                );
+                if (ok) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/',
+                    (route) => false,
+                  );
+                } else {
+                  final msg = vm.errorMessage ?? 'Registration failed';
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(msg)));
+                }
+              },
+              child: const Text('Create Account'),
+            ),
+          ],
+        ),
       ),
     );
   }
