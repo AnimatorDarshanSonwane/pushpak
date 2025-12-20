@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pushpak/di/service_locator.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import 'register_view.dart';
-import 'phone_auth_view.dart';
+//import 'phone_auth_view.dart';
 import '../home/home_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -143,17 +143,17 @@ class _LoginViewState extends State<LoginView> {
             ),
 
             // ---------------- PHONE LOGIN ----------------
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const PhoneAuthView(),
-                  ),
-                );
-              },
-              child: const Text('Phone login'),
-            ),
+            // TextButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (_) => const PhoneAuthView(),
+            //       ),
+            //     );
+            //   },
+            //   child: const Text('Phone login'),
+            // ),
           ],
         ),
       ),
