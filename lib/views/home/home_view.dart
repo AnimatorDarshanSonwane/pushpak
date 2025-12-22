@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:pushpak/di/service_locator.dart';
-import '../../viewmodels/auth_viewmodel.dart';
-import '../auth/login_view.dart'; // 👈 login screen import
+import 'package:pushpak/views/auth/auth_gate.dart';
+import '../../viewmodels/auth_viewmodel.dart'; // 👈 AuthGate screen import
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -34,7 +34,7 @@ class HomeView extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const LoginView(),
+                    builder: (_) => const AuthGate(),
                   ),
                   (route) => false,
                 );

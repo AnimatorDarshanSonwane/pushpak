@@ -48,51 +48,45 @@ class AuthService {
     return cred;
   }
 
-  // --------------------------------------------------
-  // GOOGLE SIGN-IN (UPDATED 2025)
-  // --------------------------------------------------
-
+// --------------------------------------------------
+// GOOGLE SIGN-IN (CORRECT FOR google_sign_in v6+)
+// --------------------------------------------------
 Future<UserCredential> signInWithGoogle() async {
   try {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-
-    // ---------------------------------
-    // INITIALIZE GOOGLE SIGN-IN
-    // ---------------------------------
+    // 1️⃣ Initialize Google Sign-In (safe to call multiple times)
     await GoogleSignIn.instance.initialize(
       serverClientId:
           '375010464684-ei7cgf66k5d33b9ivbs8vuigofj4njql.apps.googleusercontent.com',
     );
 
-    // ---------------------------------
-    // AUTHENTICATE USER
-    // ---------------------------------
-    final GoogleSignInAccount? googleUser =
+    // 2️⃣ Authenticate user (THIS IS CORRECT METHOD)
+    final GoogleSignInAccount googleUser =
         await GoogleSignIn.instance.authenticate();
 
-    if (googleUser == null) {
-      throw FirebaseAuthException(
-        code: 'ERROR_ABORTED_BY_USER',
-        message: 'Sign-in cancelled by user',
-      );
-    }
-
-    // ---------------------------------
-    // GET AUTH TOKENS
-    // ---------------------------------
+    // 3️⃣ Get ID token (ONLY THIS IS REQUIRED)
     final GoogleSignInAuthentication googleAuth =
         googleUser.authentication;
 
-    // ---------------------------------
-    // FIREBASE CREDENTIAL
-    // ---------------------------------
+    final String? idToken = googleAuth.idToken;
+
+    if (idToken == null) {
+      throw FirebaseAuthException(
+        code: 'MISSING_ID_TOKEN',
+        message: 'Google ID token not found',
+      );
+    }
+
+    // 4️⃣ Create Firebase credential
     final OAuthCredential credential =
         GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken
+      idToken: idToken,
     );
 
+    // 5️⃣ Firebase sign-in
     final UserCredential userCredential =
         await _auth.signInWithCredential(credential);
+
+    await saveUserToFirestore(userCredential.user);
 
     return userCredential;
   } catch (e) {
@@ -100,7 +94,6 @@ Future<UserCredential> signInWithGoogle() async {
     rethrow;
   }
 }
-
 
   // --------------------------------------------------
   // PHONE AUTH: SEND OTP
