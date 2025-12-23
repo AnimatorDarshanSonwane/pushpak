@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pushpak/widgets/botton_nav_bar.dart';
+import 'package:pushpak/widgets/location_disabled_banner.dart';
+import 'package:pushpak/viewmodels/location_viewmodel.dart';
+import 'package:pushpak/di/service_locator.dart';
+
 import '../home/home_view.dart';
 import '../services/services_view.dart';
 import '../activity/activity_view.dart';
@@ -30,11 +35,32 @@ class _MainTabViewState extends State<MainTabView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onTabChanged,
+    final double topPadding = MediaQuery.of(context).padding.top;
+
+    return ChangeNotifierProvider(
+      create: (_) => locator<LocationViewModel>(),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // 📱 APP CONTENT (BELOW STATUS BAR)
+            Positioned.fill(
+              top: topPadding,
+              child: _pages[_currentIndex],
+            ),
+
+            // 🔔 LOCATION BANNER (ALSO BELOW STATUS BAR)
+            Positioned(
+              top: topPadding,
+              left: 0,
+              right: 0,
+              child: const LocationDisabledBanner(),
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavBar(
+          currentIndex: _currentIndex,
+          onTap: _onTabChanged,
+        ),
       ),
     );
   }

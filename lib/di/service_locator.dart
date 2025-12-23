@@ -5,6 +5,8 @@ import '../services/realtime_service.dart';
 import '../viewmodels/home_viewmodel.dart';
 import '../services/auth_service.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../services/location_service.dart';
+import '../viewmodels/location_viewmodel.dart';
 
 final locator = GetIt.instance;
 
@@ -13,6 +15,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => MapService());
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => RealtimeService());
+  locator.registerLazySingleton<LocationService>(() => LocationService());
   
   // inside setupLocator()
   locator.registerLazySingleton(() => AuthService());
@@ -20,4 +23,5 @@ Future<void> setupLocator() async {
 
   // ViewModels
   locator.registerFactory(() => HomeViewModel());
+  locator.registerFactory(() => LocationViewModel(locator<LocationService>()),);
 }

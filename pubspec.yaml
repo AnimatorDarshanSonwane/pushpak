@@ -39,6 +39,7 @@ dependencies:
   json_serializable: ^6.11.3
   google_maps_flutter: ^2.14.0
   geolocator: ^14.0.2
+  permission_handler: ^11.3.1
   geocoding: ^4.0.0
   flutter_dotenv: ^6.0.0
   hive: ^2.2.3
