@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pushpak/di/service_locator.dart';
 import 'package:pushpak/viewmodels/location_viewmodel.dart';
 import 'package:pushpak/viewmodels/network_viewmodel.dart';
+import 'package:pushpak/viewmodels/ride_viewmodel.dart';
 import 'package:pushpak/widgets/botton_nav_bar.dart';
 import 'package:pushpak/widgets/location_disabled_banner.dart';
 import 'package:pushpak/widgets/network_connection_banner.dart';
@@ -46,6 +47,10 @@ class _MainTabViewState extends State<MainTabView> {
         ChangeNotifierProvider<LocationViewModel>.value(
           value: locator<LocationViewModel>(),
         ),
+        // 🚕 Ride (Firestore user-wise data)
+        ChangeNotifierProvider<RideViewModel>(
+          create: (_) => locator<RideViewModel>()..loadRecentSearches(),
+    ),
       ],
       child: Scaffold(
         body: Selector2<NetworkViewModel, LocationViewModel, _BannerState>(
