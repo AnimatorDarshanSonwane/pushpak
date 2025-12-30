@@ -40,8 +40,12 @@ class _MainTabViewState extends State<MainTabView> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => locator<NetworkViewModel>()),
-        ChangeNotifierProvider(create: (_) => locator<LocationViewModel>()),
+        ChangeNotifierProvider<NetworkViewModel>.value(
+          value: locator<NetworkViewModel>(),
+        ),
+        ChangeNotifierProvider<LocationViewModel>.value(
+          value: locator<LocationViewModel>(),
+        ),
       ],
       child: Scaffold(
         body: Selector2<NetworkViewModel, LocationViewModel, _BannerState>(
@@ -51,9 +55,11 @@ class _MainTabViewState extends State<MainTabView> {
           ),
           builder: (context, bannerState, _) {
             final bool showNetworkBanner = !bannerState.isConnected;
-            final bool showLocationBanner = bannerState.isConnected && !bannerState.isLocationEnabled;
+            final bool showLocationBanner =
+                bannerState.isConnected && !bannerState.isLocationEnabled;
 
-            final double totalBannerHeight = (showNetworkBanner ? _singleBannerHeight : 0.0) +
+            final double totalBannerHeight =
+                (showNetworkBanner ? _singleBannerHeight : 0.0) +
                 (showLocationBanner ? _singleBannerHeight : 0.0);
 
             // 🔥 Status bar turant update — ab rebuild guaranteed fast hai
@@ -64,11 +70,13 @@ class _MainTabViewState extends State<MainTabView> {
                       statusBarIconBrightness: Brightness.light,
                     )
                   : showLocationBanner
-                      ? const SystemUiOverlayStyle(
-                          statusBarColor: _locationBannerColor,
-                          statusBarIconBrightness: Brightness.light,
-                        )
-                      : SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+                  ? const SystemUiOverlayStyle(
+                      statusBarColor: _locationBannerColor,
+                      statusBarIconBrightness: Brightness.light,
+                    )
+                  : SystemUiOverlayStyle.dark.copyWith(
+                      statusBarColor: Colors.transparent,
+                    ),
             );
 
             return Stack(
@@ -89,7 +97,9 @@ class _MainTabViewState extends State<MainTabView> {
 
                 if (showLocationBanner)
                   Positioned(
-                    top: topPadding + (showNetworkBanner ? _singleBannerHeight : 0.0),
+                    top:
+                        topPadding +
+                        (showNetworkBanner ? _singleBannerHeight : 0.0),
                     left: 0,
                     right: 0,
                     height: _singleBannerHeight,

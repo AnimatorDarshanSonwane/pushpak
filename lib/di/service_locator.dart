@@ -1,3 +1,5 @@
+// di/service_locator.dart
+
 import 'package:get_it/get_it.dart';
 
 import '../services/map_service.dart';
@@ -22,18 +24,24 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => RealtimeService());
   locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton<LocationService>(() => LocationService());
+
+  // LocationService with proper dispose
+  locator.registerLazySingleton<LocationService>(
+    () => LocationService(),
+    dispose: (service) => service.dispose(),
+  );
+
   locator.registerLazySingleton<NetworkService>(() => NetworkService());
 
   // =======================
-  // 🧠 VIEW MODELS (Factory)
+  // 🧠 VIEW MODELS (Singleton - Critical Fix!)
   // =======================
-  locator.registerFactory(() => HomeViewModel());
-  locator.registerFactory(() => AuthViewModel());
-  locator.registerFactory(() => NetworkViewModel());
+  locator.registerLazySingleton(() => HomeViewModel());
+  locator.registerLazySingleton(() => AuthViewModel());
 
-  locator.registerFactory(
+  // 🔥 NetworkViewModel aur LocationViewModel ko singleton banao
+  locator.registerLazySingleton(() => NetworkViewModel());
+  locator.registerLazySingleton(
     () => LocationViewModel(locator<LocationService>()),
   );
-  
 }

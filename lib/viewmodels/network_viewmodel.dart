@@ -2,16 +2,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-class NetworkViewModel extends ChangeNotifier {
+class NetworkViewModel extends ChangeNotifier with WidgetsBindingObserver {
   final Connectivity _connectivity = Connectivity();
 
   StreamSubscription<List<ConnectivityResult>>? _subscription;
+  Timer? _periodicTimer;
 
-  bool _isConnected = true;
+  bool _isConnected = false;
   bool get isConnected => _isConnected;
 
   NetworkViewModel() {
+    WidgetsBinding.instance.addObserver(this);
     _initConnectivity();
+    checkNow(); // ViewModel create zalyavar lagch check kara
+    _periodicTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      checkNow();
+    });
   }
 
   Future<void> _initConnectivity() async {
@@ -50,8 +56,8 @@ class NetworkViewModel extends ChangeNotifier {
       _isConnected = nowConnected;
       debugPrint('🌐 Network status changed: $_isConnected');
       WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifyListeners();
-    });
+        notifyListeners();
+      });
       notifyListeners(); // 🔥 UI ko turant update karega
     }
   }
@@ -67,8 +73,18 @@ class NetworkViewModel extends ChangeNotifier {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      checkNow(); // App resume zalyavar network check kara
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _subscription?.cancel();
+    _periodicTimer?.cancel();
     super.dispose();
   }
 }
